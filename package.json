@@ -1,5 +1,5 @@
 {
-  "name": "mimosa-store",
+  "name": "mimosa-svgstore",
   "version": "0.1.0",
   "homepage": "https://github.com/mgooood/mimosa-svgstore",
   "author": "Mark Good",
@@ -27,5 +27,8 @@
   "main": "./src/index",
   "scripts": {
     "prepublish": "mimosa build"
+  },
+  "devDependencies": {
+    "mimosa": "^2.3.29"
   }
 }
