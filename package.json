@@ -26,9 +26,13 @@
   },
   "main": "./src/index",
   "scripts": {
-    "prepublish": "mimosa build"
+    "prepublish": "mimosa build",
+    "test": "node_modules/.bin/mocha"
   },
   "devDependencies": {
-    "mimosa": "^2.3.29"
+    "mimosa": "^2.3.29",
+    "mocha": "1.9.0",
+    "chai": "1.5.0",
+    "validatemimosa": "1.3.5"
   }
 }
