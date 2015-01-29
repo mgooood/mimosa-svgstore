@@ -6,7 +6,7 @@
 
 exports.defaults = function() {
   return {
-    svg: {
+    svgstore: {
       inDir: "svg/icons",
       outDir: "svg",
       options: {}
@@ -14,14 +14,12 @@ exports.defaults = function() {
   };
 };
 
-exports.placeholder = function () {
-   var ph = "SVG placeholder stuff";
-  return ph;
-};
-
 exports.validate = function ( config, validators ) {
   var errors = [];
 
+  if ( validators.ifExistsIsObject( errors, "svgstore config", config.svgstore ) ) {
+
+  }
 
   return errors;
 };
