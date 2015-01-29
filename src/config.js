@@ -1,16 +1,15 @@
+/* eslint strict:0 */
 "use strict";
 
-var path = require( "path" ),
-    fs = require( "fs" );
+//var path = require( "path" ),
+//    fs = require( "fs" );
 
 exports.defaults = function() {
   return {
-    sprite: {
+    svg: {
       inDir: "svg/icons",
       outDir: "svg",
-      options: {
-        stylesheet: "stylus"
-      }
+      options: {}
     }
   };
 };

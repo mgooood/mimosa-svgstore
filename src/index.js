@@ -1,16 +1,9 @@
 /* eslint strict:0 */
 
-var fs = require( "fs" )
-  , path = require( "path" )
+var config = require( "./config"),
+    logger = null;
 
-  , nsg = require( "node-sprite-generator" )
-  , _ = require( "lodash" )
-  , async = require( "async" )
-  , wrench = require( "wrench" )
 
-  , config = require( "./config" )
-
-  , logger = null;
 
 
 var _runSvgGenerator = function ( generatorConfig, cb ) {
@@ -39,7 +32,7 @@ var registerCommand = function ( program, retrieveConfig ) {
 
 module.exports = {
   registerCommand: registerCommand,
-  defaults:        config.defaults,
-  placeholder:     config.placeholder,
-  validate:        config.validate
+  defaults: config.defaults,
+  placeholder: config.placeholder,
+  validate: config.validate
 };
