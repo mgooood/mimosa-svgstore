@@ -185,7 +185,7 @@ function sanitize(nodeList, filepath) {
 
     // Discount linting
     linter.lint(node).forEach(function (warning) {
-      _logger.warn('[[ %s ]] => %s', filepath, warning);
+      _logger.warn('linter: [[ %s ]] => %s', path.basename(filepath), warning);
     });
   });
 
