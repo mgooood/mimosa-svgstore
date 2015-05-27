@@ -1,36 +1,45 @@
-/* eslint strict:0 */
+var config = require('./config');
+var execute = require('./execute');
 
-var config = require( "./config"),
-      
-    logger = null;
+/**
+ * Generates a logger wrapper that prefixes the module name to log output.
+ *
+ * @param  {Object} logger The raw Mimosa logger
+ * @return {Object}
+ */
+function generateLoggerProxy(logger) {
+  var proxy = {};
 
-var _runSvgGenerator = function ( generatorConfig, cb ) {
+  ['info', 'warn', 'success', 'error', 'debug'].forEach(function(level) {
+    proxy[level] = function() {
+      var fn = logger[level];
+      var argsArray = Array.prototype.slice.call(arguments);
+      argsArray[0] = 'mimosa-svgstore: ' + argsArray[0];
 
-};
+      return fn.apply(logger, argsArray);
+    };
+  });
 
-var generateSvg = function ( mimosaConfig ) {
-  console.log("trying to run generateSvg");
-  //call to runSpriteGenerator
-};
+  return proxy;
+}
 
-var registerCommand = function ( program, retrieveConfig ) {
+function registerCommand(program, logger, retrieveConfig) {
+  var loggerProxy = generateLoggerProxy(logger);
+
   program
-    .command( "svgstore" )
-    .option("-D, --mdebug", "run in debug mode")
-    .option("-P, --profile <profileName>", "select a mimosa profile")
-    .description( "Generate single svg file for a folder of .svgs" )
-    .action( function( opts ){
-      opts.buildFirst = false;
-      retrieveConfig( opts, function( mimosaConfig ) {
-        logger = mimosaConfig.log;
-        generateSvg( mimosaConfig );
+    .command('svgstore')
+    .option('-D, --mdebug', 'run in debug mode')
+    .description('Generate single svg file for a folder of .svgs')
+    .action(function(options) {
+      options.buildFirst = false;
+      retrieveConfig(options, function(mimosaConfig) {
+        execute(mimosaConfig.svgstore, loggerProxy);
       });
     });
-};
+}
 
 module.exports = {
+  defaults:        config.defaults,
   registerCommand: registerCommand,
-  defaults: config.defaults,
-  validate: config.validate,
-  generateSvg: generateSvg
+  validate:        config.validate
 };

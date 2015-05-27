@@ -23,7 +23,11 @@
     "mmodule",
     "svg"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "glob": "^5.0.10",
+    "xmldom": "^0.1.19",
+    "xpath": "0.0.9"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=0.10"
