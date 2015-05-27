@@ -1,8 +1,9 @@
-var fs    = require('fs');
-var path  = require('path');
-var glob  = require('glob');
-var xml   = require('xmldom');
-var xpath = require('xpath');
+var fs     = require('fs');
+var path   = require('path');
+var glob   = require('glob');
+var xml    = require('xmldom');
+var xpath  = require('xpath');
+var linter = require('./linter');
 
 var COMMENT_NODE    = 8;
 var TEXT_NODE       = 3;
@@ -147,7 +148,10 @@ function processSingleSvgFile(filepath) {
     var svg = selectOne('/svg:svg', document);
 
     _logger.info('Processing [[ %s ]]', filepath);
-    appendToRepository(filename, sanitize(svg.childNodes));
+    _logger.debug('Sanitizing nodes for [[ %s ]]', filepath);
+    var nodes = sanitize(svg.childNodes, filepath);
+
+    appendToRepository(filename, nodes);
 
     didProcessSingleSvgFile(filepath);
   });
@@ -157,12 +161,13 @@ function processSingleSvgFile(filepath) {
  * Walk a tree of nodes and remove anything that may be undesirable.
  *
  * @param  {NodeList} nodeList
+ * @param  {String} filepath
  * @return {NodeList}
  */
-function sanitize(nodeList) {
+function sanitize(nodeList, filepath) {
   arrayify(nodeList).forEach(function (node) {
     if (node.childNodes) {
-      sanitize(node.childNodes);
+      sanitize(node.childNodes, filepath);
     }
 
     // Remove superfluous nodes
@@ -177,6 +182,11 @@ function sanitize(nodeList) {
       node.removeAttribute('id');
       node.removeAttribute('style');
     }
+
+    // Discount linting
+    linter.lint(node).forEach(function (warning) {
+      _logger.warn('[[ %s ]] => %s', filepath, warning);
+    });
   });
 
   return nodeList;
