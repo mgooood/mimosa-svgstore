@@ -3,6 +3,7 @@ const POLYGON  = 'polygon';
 const STYLE    = 'style';
 const BIG_ATTR = 200;
 
+const TEMPLATE_ATTR_DISPLAY_NONE   = '<{tag}/> attribute `display` eq `none` (ln {position})';
 const TEMPLATE_ATTR_IS_LONG        = '<{tag}/> attribute `{attr}` is longer than {threshold} (ln {position})';
 const TEMPLATE_ATTR_HAS_LINEBREAKS = '<{tag}/> attribute `{attr}` contains line breaks (ln {position})';
 const TEMPLATE_STYLE_TAG           = '<style/> tag detected (ln {position})';
@@ -53,8 +54,11 @@ function lint(node) {
       break;
   }
 
-  // No CDATA
-
+  if (node.attributes && node.getAttribute('display') === 'none') {
+    warnings.push(TEMPLATE_ATTR_DISPLAY_NONE
+      .replace('{tag}', node.tagName)
+      .replace('{position}', position));
+  }
 
   return warnings;
 }
