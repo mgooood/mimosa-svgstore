@@ -5,12 +5,33 @@ mimosa-svgstore
 
 This module concatenates a bunch of `.svg` files into a single XML file.
 
+### Why?
+
 The idea is to generate a single master `<svg>` element that can be included in a generated template and used as such:
 
-```handlebars
+```html
 <!-- #include 'repository.html' (or however the kids are doing it these days) -->
 
-<svg class="icon-flower" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-flower"/></svg>
+<ul>
+  <li>
+    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <span>Document #1</span>
+  </li>
+  <li>
+    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <span>Document #2</span>
+  </li>
+  ...
+  <li>
+    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <span>Document #50</span>
+  </li>
+</ul>
+
+<button>
+  <svg class="icon-download" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-download"/></svg>
+  <span>Download Everything</span>
+</button>
 ```
 
 [Reference, courtesy of MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use).
