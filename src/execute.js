@@ -11,7 +11,7 @@ var NAMESPACE_SVG   = 'http://www.w3.org/2000/svg';
 var NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
 
 var _numberOfRemainingFiles = 0;
-var _logger, _outputFile, _repository, _repositoryId, _viewbox;
+var _logger, _outputFile, _repository, _repositoryId, _viewBox;
 
 /**
  * Adds a collection of nodes to the repository.
@@ -103,7 +103,7 @@ function initializeRepository() {
 
   var root = _repository.createElement('svg');
   root.setAttribute('id', _repositoryId);
-  root.setAttribute('viewBox', _viewbox);
+  root.setAttribute('viewBox', _viewBox);
 
   _repository.appendChild(root);
 }
@@ -118,7 +118,7 @@ function main(config, loggerInstance) {
   var pattern = config.sourcePattern;
   _outputFile = config.outputFile;
   _repositoryId = config.repositoryId;
-  _viewbox = config.viewbox;
+  _viewBox = config.viewBox;
   _logger = loggerInstance;
 
   _logger.debug('Globbing files: [[ %s ]]', pattern);
