@@ -1,5 +1,5 @@
 exports.config =
-  modules: ['jshint', 'copy']
+  modules: ['jshint', 'copy', 'svgstore']
   watch:
     sourceDir: 'src'
     compiledDir: 'lib'
@@ -7,3 +7,6 @@ exports.config =
   jshint:
     rules:
       node: true
+  svgstore:
+    sourcePattern: 'test/fixtures/input/**/*.svg'
+    outputFile: 'test/fixtures/output/repository.html'
