@@ -20,7 +20,10 @@ var _logger, _outputFile, _repository, _repositoryId, _viewbox;
  */
 function appendToRepository(filename, nodeList) {
   var container = _repository.createElement('g');
-  container.setAttribute('id', generateId(filename));
+  var id = generateId(filename);
+
+  _logger.debug('Constructing node [[ #%s ]]', id);
+  container.setAttribute('id', id);
 
   // Import and wrap the nodes
   arrayify(nodeList).forEach(function(node) {
@@ -219,9 +222,12 @@ function commitRepository(filepath) {
 
   var xml = _repository.toString();
 
+  _logger.debug('About to write to [[ %s ]]', filepath);
   fs.writeFile(filepath, xml, function(error) {
     if (error) {
       _logger.error('Could not write to [[ %s ]]', filepath, error);
+    } else {
+      _logger.success('Wrote SVG repository to [[ ' + filepath + ' ]]');
     }
   });
 }
