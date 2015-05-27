@@ -99,8 +99,8 @@ function generateId(filename) {
  */
 function initializeRepository() {
   _repository = new xml.DOMImplementation().createDocument();
-  var root = _repository.createElement('svg');
 
+  var root = _repository.createElement('svg');
   root.setAttribute('id', _repositoryId);
   root.setAttribute('viewBox', _viewbox);
 
@@ -172,9 +172,6 @@ function sanitize(nodeList) {
         node.parentNode.removeChild(node);
         return;
     }
-
-    // TODO add linter
-    // Remove style tag
 
     if (node.attributes) {
       node.removeAttribute('id');
