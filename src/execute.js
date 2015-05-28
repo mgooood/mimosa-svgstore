@@ -147,14 +147,18 @@ function main(config, loggerInstance, callback) {
 function processSingleSvgFile(filepath) {
   var filename = path.basename(filepath);
   fs.readFile(filepath, function(err, buffer) {
-    var document = generateDocument(buffer);
-    var svg = selectOne('/svg:svg', document);
+    try {
+      var document = generateDocument(buffer);
+      var svg = selectOne('/svg:svg', document);
 
-    _logger.info('Processing [[ %s ]]', filepath);
-    _logger.debug('Sanitizing nodes for [[ %s ]]', filepath);
-    var nodes = sanitize(svg.childNodes, filepath);
+      _logger.info('Processing [[ %s ]]', filepath);
+      _logger.debug('Sanitizing nodes for [[ %s ]]', filepath);
+      var nodes = sanitize(svg.childNodes, filepath);
 
-    appendToRepository(filename, nodes);
+      appendToRepository(filename, nodes);
+    } catch (error) {
+      _logger.error('[[ %s ]] %s', filepath, error);
+    }
 
     didProcessSingleSvgFile(filepath);
   });
