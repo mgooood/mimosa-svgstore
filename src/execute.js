@@ -11,7 +11,7 @@ var NAMESPACE_SVG   = 'http://www.w3.org/2000/svg';
 var NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
 
 var _numberOfRemainingFiles = 0;
-var _logger, _outputFile, _repository, _repositoryId, _viewBox;
+var _callback, _logger, _outputFile, _repository, _repositoryId, _viewBox;
 
 /**
  * Adds a collection of nodes to the repository.
@@ -113,13 +113,15 @@ function initializeRepository() {
  *
  * @param {Object} config
  * @param {Object} loggerInstance
+ * @param {Function?} callback
  */
-function main(config, loggerInstance) {
+function main(config, loggerInstance, callback) {
   var pattern = config.sourcePattern;
   _outputFile = config.outputFile;
   _repositoryId = config.repositoryId;
   _viewBox = config.viewBox;
   _logger = loggerInstance;
+  _callback = typeof callback === 'function' ? callback : function() {};
 
   _logger.debug('Globbing files: [[ %s ]]', pattern);
   glob(pattern, function(_, files) {
@@ -132,6 +134,7 @@ function main(config, loggerInstance) {
       files.forEach(processSingleSvgFile);
     } else {
       _logger.info('No source files found');
+      _callback();
     }
   });
 }
@@ -236,6 +239,8 @@ function commitRepository(filepath) {
     } else {
       _logger.success('Wrote SVG repository to [[ ' + filepath + ' ]]');
     }
+
+    _callback();
   });
 }
 
