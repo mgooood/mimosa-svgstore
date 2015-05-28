@@ -1,27 +1,14 @@
 /* global mocha */
-var path       = require('path');
-var expect     = require('chai').expect;
+var path   = require('path');
+var expect = require('chai').expect;
+var utils  = require('./utils');
 
 var linter = require(path.resolve(__dirname, '../src/linter'));
 
-const POLYGON_GOOD = '0,0 1,1 0,1 1,0';
-const POLYGON_LONG = '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001 ' +
-                     '0.000000001,0.000000001 0.000000001,0.000000001';
-const POLYGON_LINEBREAK = POLYGON_LONG.replace(/ /g, '\n\t');
+const POINTS_LONG      = '0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333';
+const POINTS_LINEBREAK = '0.33,0.33\r\n\t0.33,0.33 0.33,0.33';
+const LINE_NUMBER      = 123;
+const COLUMN_NUMBER    = 321;
 
 describe('linter#lint()', function() {
   var element, warnings;
@@ -32,63 +19,53 @@ describe('linter#lint()', function() {
   });
 
   it('accepts good polygon without false positives', function() {
-    element = generatePolygon('0,0 1,1 0,1 1,0');
+    element = utils.generatePolygon();
     warnings = linter.lint(element);
-
-    expect(warnings).to.have.length(0);
+    expect(warnings).to.be.empty;
   });
 
   it('accepts good path without false positives', function() {
-    element = generatePath('0,0 1,1 0,1 1,0');
+    element = utils.generatePath();
     warnings = linter.lint(element);
-
-    expect(warnings).to.have.length(0);
+    expect(warnings).to.be.empty;
   });
 
   it('catches long `d` attribute', function() {
-    element = generatePolygon();
-
+    element = utils.generatePolygon(POINTS_LONG);
     warnings = linter.lint(element);
-
-    expect()
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.match(/attribute `points` is longer than \d+/);
+    expect(warnings[0]).to.contain(element.lineNumber + 1);
+    expect(warnings[0]).to.contain(element.columnNumber);
   });
 
   it('catches long `path` attribute', function() {
-
+    element = utils.generatePath(POINTS_LONG);
+    warnings = linter.lint(element);
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.match(/attribute `d` is longer than \d+/);
+    expect(warnings[0]).to.contain(element.lineNumber + 1);
+    expect(warnings[0]).to.contain(element.columnNumber);
   });
 
-  it('catches linebreaks in `d` attribute', function() {
-    element = generatePath('M0,0\n1,1');
-
+  it('catches line breaks in `d` attribute', function() {
+    element = utils.generatePath('M0,0\n1,1');
+    expect(false).to.be.true;
   });
 
-  it('catches linebreaks in `points` attribute', function() {
-    element = generatePolygon('0,0\n\t1,1 0,1 1,0');
-
+  it('catches line breaks in `points` attribute', function() {
+    element = utils.generatePolygon('0,0\n\t1,1 0,1 1,0');
+    expect(false).to.be.true;
   });
 
   it('catches `display = none` attribute', function() {
-
+    expect(false).to.be.true;
   });
 
   it('catches <style/> tag', function() {
-
+    element = utils.generateElement('style');
+    warnings = linter.lint(element);
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.equal('<style/> tag detected (ln 332212:112233)');
   });
 });
-
-function generateElement(tagName, attrs) {
-  return {
-    attributes:   attrs,
-    tagName:      tagName.toLowerCase(),
-    getAttribute: function(key) {
-      return JSON.stringify(attrs[key]);
-    }
-  };
-}
-
-function generatePolygon(d) {
-  return generateElement('polygon', {
-    d: d || '0,0 1,1 0,1 1,0'
-  });
-}
-
