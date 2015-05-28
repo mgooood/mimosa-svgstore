@@ -9,7 +9,7 @@ exports.generateElement = function (tagName, attrs) {
     lineNumber:   LINE_NUMBER,
     tagName:      tagName.toLowerCase(),
     getAttribute: function (key) {
-      return attrs[key] || '';
+      return this.attributes[key] || '';
     }
   };
 };

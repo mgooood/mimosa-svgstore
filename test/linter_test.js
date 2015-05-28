@@ -57,7 +57,9 @@ describe('linter#lint()', function() {
 
   it('catches line breaks in `points` attribute', function() {
     element = utils.generatePolygon('0,0\n\t1,1 0,1 1,0');
-    expect(false).to.be.true;
+    warnings = linter.lint(element);
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.contain('<polygon/> attribute `points` contains line breaks (ln 332212:112233)');
   });
 
   it('catches `display = none` attribute', function() {
