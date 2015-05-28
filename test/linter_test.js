@@ -1,14 +1,11 @@
-/* global mocha */
-var path   = require('path');
 var expect = require('chai').expect;
-var utils  = require('./utils');
+var linter = require('../src/linter');
 
-var linter = require(path.resolve(__dirname, '../src/linter'));
-
+const DEFAULT_POINTS   = '0,0 1,1 0,1 1,0';
 const POINTS_LONG      = '0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333';
 const POINTS_LINEBREAK = '0.33,0.33\r\n\t0.33,0.33 0.33,0.33';
-const LINE_NUMBER      = 123;
-const COLUMN_NUMBER    = 321;
+const COLUMN_NUMBER    = 112233;
+const LINE_NUMBER      = 332211;
 
 describe('linter#lint()', function() {
   var element, warnings;
@@ -19,19 +16,19 @@ describe('linter#lint()', function() {
   });
 
   it('accepts good polygon without false positives', function() {
-    element = utils.generatePolygon();
+    element = generatePolygon();
     warnings = linter.lint(element);
     expect(warnings).to.be.empty;
   });
 
   it('accepts good path without false positives', function() {
-    element = utils.generatePath();
+    element = generatePath();
     warnings = linter.lint(element);
     expect(warnings).to.be.empty;
   });
 
   it('catches long `d` attribute', function() {
-    element = utils.generatePolygon(POINTS_LONG);
+    element = generatePolygon(POINTS_LONG);
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.match(/attribute `points` is longer than \d+/);
@@ -40,7 +37,7 @@ describe('linter#lint()', function() {
   });
 
   it('catches long `path` attribute', function() {
-    element = utils.generatePath(POINTS_LONG);
+    element = generatePath(POINTS_LONG);
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.match(/attribute `d` is longer than \d+/);
@@ -49,30 +46,58 @@ describe('linter#lint()', function() {
   });
 
   it('catches line breaks in `d` attribute', function() {
-    element = utils.generatePath(POINTS_LINEBREAK);
+    element = generatePath(POINTS_LINEBREAK);
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.contain('<path/> attribute `d` contains line breaks (ln 332212:112233)');
   });
 
   it('catches line breaks in `points` attribute', function() {
-    element = utils.generatePolygon('0,0\n\t1,1 0,1 1,0');
+    element = generatePolygon(POINTS_LINEBREAK);
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.contain('<polygon/> attribute `points` contains line breaks (ln 332212:112233)');
   });
 
   it('catches `display = none` attribute', function() {
-    element = utils.generateElement('rect', { display: 'none' });
+    element = generateElement('rect', { display: 'none' });
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.equal('<rect/> attribute `display` eq `none` (ln 332212:112233)');
   });
 
   it('catches <style/> tag', function() {
-    element = utils.generateElement('style');
+    element = generateElement('style');
     warnings = linter.lint(element);
     expect(warnings).to.have.length(1);
     expect(warnings[0]).to.equal('<style/> tag detected (ln 332212:112233)');
   });
 });
+
+///
+/// Helpers
+///
+
+function generateElement(tagName, attrs) {
+  return {
+    attributes:   attrs || {},
+    columnNumber: COLUMN_NUMBER,
+    lineNumber:   LINE_NUMBER,
+    tagName:      tagName.toLowerCase(),
+    getAttribute: function (key) {
+      return this.attributes[key] || '';
+    }
+  };
+}
+
+function generatePath(d) {
+  return generateElement('path', {
+    d: d || DEFAULT_POINTS
+  });
+}
+
+function generatePolygon(points) {
+  return generateElement('polygon', {
+    points: points || DEFAULT_POINTS
+  });
+}

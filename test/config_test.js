@@ -1,9 +1,6 @@
-/* global mocha */
-var path       = require('path');
 var expect     = require('chai').expect;
 var validators = require('validatemimosa');
-
-var config = require(path.resolve(__dirname, '../src/config'));
+var config     = require('../src/config');
 
 describe('config', function() {
 
