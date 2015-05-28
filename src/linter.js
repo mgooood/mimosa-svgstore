@@ -39,7 +39,7 @@ function lint(node) {
     }
   }
 
-  switch (node.tagName) {
+  switch (node.tagName.toLowerCase()) {
     case STYLE:
       warnings.push(TEMPLATE_STYLE_TAG
         .replace('{position}', position));
