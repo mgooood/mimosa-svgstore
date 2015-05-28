@@ -21,17 +21,28 @@ describe('execute#main()', function () {
     removeOutputFile();
   });
 
-  it('can handle not finding files', function () {
-    expect(true).to.be.false;
-  });
+  it('operates normally', function (done) {
+    execute(config, logger, function() {
+      var logs = logger.playback();
+      var lastLog = logs[logs.length - 1];
+      var errors = logs.filter(_onlyErrors);
+      var xml = fs.readFileSync(OUTPUT_FILE);
 
-  it('handles output file in unwriteable directory', function () {
-    expect(true).to.be.false;
+      expect(errors).to.be.empty;
+      expect(lastLog.op).to.equal('success');
+      expect(xml).to.contain(REPOSITORY_ID);
+      expect(xml).to.contain(VIEW_BOX);
+      expect(xml).to.contain('id="test-repo-id-alpha"');
+      expect(xml).to.contain('id="test-repo-id-bravo"');
+      expect(xml).to.contain('id="test-repo-id-charlie"');
+
+      done();
+  });
   });
 
   it('handles bad XML gracefully', function () {
     expect(true).to.be.false;
-  });
+    });
 
 });
 
