@@ -4,10 +4,10 @@ var expect  = require('chai').expect;
 var execute = require('../src/execute');
 
 const BROKEN_FILE_PATTERN = 'test/fixtures/input/malformed.xml';
-const SOURCE_PATTERN = 'test/fixtures/input/**/*.svg';
-const OUTPUT_FILE    = 'test/fixtures/output/test-repository.html';
-const REPOSITORY_ID  = 'test-repo-id';
-const VIEW_BOX       = '0 0 9001 9001';
+const SOURCE_PATTERN      = 'test/fixtures/input/**/*.svg';
+const OUTPUT_FILE         = 'test/fixtures/output/test-repository.html';
+const REPOSITORY_ID       = 'test-repo-id';
+const VIEW_BOX            = '0 0 9001 9001';
 
 describe('execute#main()', function () {
   var config, logger;
@@ -38,7 +38,7 @@ describe('execute#main()', function () {
       expect(xml).to.contain('id="test-repo-id-charlie"');
 
       done();
-  });
+    });
   });
 
   it('handles not finding files', function (done) {
@@ -54,7 +54,7 @@ describe('execute#main()', function () {
 
       done();
     });
-    });
+  });
 
   it('handles bad XML without blowing up', function (done) {
     config.sourcePattern = BROKEN_FILE_PATTERN;
