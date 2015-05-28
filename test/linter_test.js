@@ -49,8 +49,10 @@ describe('linter#lint()', function() {
   });
 
   it('catches line breaks in `d` attribute', function() {
-    element = utils.generatePath('M0,0\n1,1');
-    expect(false).to.be.true;
+    element = utils.generatePath(POINTS_LINEBREAK);
+    warnings = linter.lint(element);
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.contain('<path/> attribute `d` contains line breaks (ln 332212:112233)');
   });
 
   it('catches line breaks in `points` attribute', function() {
@@ -59,7 +61,10 @@ describe('linter#lint()', function() {
   });
 
   it('catches `display = none` attribute', function() {
-    expect(false).to.be.true;
+    element = utils.generateElement('rect', { display: 'none' });
+    warnings = linter.lint(element);
+    expect(warnings).to.have.length(1);
+    expect(warnings[0]).to.equal('<rect/> attribute `display` eq `none` (ln 332212:112233)');
   });
 
   it('catches <style/> tag', function() {
