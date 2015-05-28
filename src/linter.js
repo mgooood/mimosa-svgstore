@@ -34,7 +34,6 @@ function lint(node) {
       warnings.push(TEMPLATE_ATTR_HAS_LINEBREAKS
         .replace('{tag}', node.tagName)
         .replace('{attr}', key)
-        .replace('{threshold}', threshold)
         .replace('{position}', position));
     }
   }
