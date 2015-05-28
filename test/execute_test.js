@@ -3,7 +3,9 @@ var path    = require('path');
 var expect  = require('chai').expect;
 var execute = require('../src/execute');
 
-const BROKEN_FILE_PATTERN = 'test/fixtures/input/malformed.xml';
+const PATTERN_NO_FILES    = 'lorem/ipsum/dolor/**/*.svg';
+const PATTERN_BROKEN_FILE = 'test/fixtures/input/malformed.xml';
+const PATH_UNWRITEABLE    = 'lorem/ipsum/dolor/cant-write-here.xml';
 const SOURCE_PATTERN      = 'test/fixtures/input/**/*.svg';
 const OUTPUT_FILE         = 'test/fixtures/output/test-repository.html';
 const REPOSITORY_ID       = 'test-repo-id';
@@ -42,7 +44,7 @@ describe('execute#main()', function () {
   });
 
   it('handles not finding files', function (done) {
-    config.sourcePattern = 'lorem/ipsum/dolor/**/*.svg';
+    config.sourcePattern = PATTERN_NO_FILES;
     execute(config, logger, function() {
       var logs = logger.playback();
       var lastLog = logs[logs.length - 1];
@@ -57,7 +59,7 @@ describe('execute#main()', function () {
   });
 
   it('handles bad XML without blowing up', function (done) {
-    config.sourcePattern = BROKEN_FILE_PATTERN;
+    config.sourcePattern = PATTERN_BROKEN_FILE;
     execute(config, logger, function() {
       var logs = logger.playback();
       var lastLog = logs[logs.length - 1];
@@ -65,14 +67,29 @@ describe('execute#main()', function () {
       var error = errors[0];
 
       expect(errors.length).to.equal(1);
-      expect(error).to.be.ok;
-      expect(error.args).to.include(BROKEN_FILE_PATTERN);
+      expect(error).to.exist;
+      expect(error.args).to.include(PATTERN_BROKEN_FILE);
       expect(lastLog.op).to.equal('success');  // failure shouldn't derail the repo
 
       done();
     });
   });
 
+  it('handles output file in unwriteable directory', function (done) {
+    config.outputFile = PATH_UNWRITEABLE;
+    execute(config, logger, function() {
+      var logs = logger.playback();
+      var lastLog = logs[logs.length - 1];
+      var errors = logs.filter(_onlyErrors);
+      var error = errors[0];
+
+      expect(errors.length).to.equal(1);
+      expect(error.args).to.include(PATH_UNWRITEABLE);
+      expect(lastLog.op).to.equal('error');
+
+      done();
+    });
+  });
 });
 
 ///

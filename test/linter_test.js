@@ -1,6 +1,7 @@
 var expect = require('chai').expect;
 var linter = require('../src/linter');
 
+const ELEMENT_NODE     = 1;
 const DEFAULT_POINTS   = '0,0 1,1 0,1 1,0';
 const POINTS_LONG      = '0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333 0.3333333333333,0.3333333333333';
 const POINTS_LINEBREAK = '0.33,0.33\r\n\t0.33,0.33 0.33,0.33';
@@ -83,6 +84,7 @@ function generateElement(tagName, attrs) {
     attributes:   attrs || {},
     columnNumber: COLUMN_NUMBER,
     lineNumber:   LINE_NUMBER,
+    nodeType:     ELEMENT_NODE,
     tagName:      tagName.toLowerCase(),
     getAttribute: function (key) {
       return this.attributes[key] || '';
