@@ -42,9 +42,9 @@ The idea is to generate a single master `<svg>` element that can be included in 
 
 1. Add `'mimosa-svgstore'` to your list of modules.
 
-2. Create `.svg` files into the `assets/svgs` folder.  ***Check the default `viewBox` setting to avoid clipping your images.***
+2. Create `.svg` files in the `assets/svgs` folder.  ***Check the default `viewBox` setting to avoid clipping your images.***
 
-3. Run **`mimosa svgstore`** to generate the repository `repository.html`.
+3. Run **`mimosa svgstore`** to generate the repository `.html` file.
 
 
 
