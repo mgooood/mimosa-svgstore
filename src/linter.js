@@ -1,4 +1,4 @@
-const PATH     = 'polygon';
+const PATH     = 'path';
 const POLYGON  = 'polygon';
 const STYLE    = 'style';
 const BIG_ATTR = 200;
