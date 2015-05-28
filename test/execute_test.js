@@ -40,8 +40,19 @@ describe('execute#main()', function () {
   });
   });
 
-  it('handles bad XML gracefully', function () {
-    expect(true).to.be.false;
+  it('handles not finding files', function (done) {
+    config.sourcePattern = 'lorem/ipsum/dolor/**/*.svg';
+    execute(config, logger, function() {
+      var logs = logger.playback();
+      var lastLog = logs[logs.length - 1];
+      var errors = logs.filter(_onlyErrors);
+
+      expect(errors).to.be.empty;
+      expect(lastLog.op).to.equal('info');
+      expect(lastLog.args.join()).to.equal('No source files found');
+
+      done();
+    });
     });
 
 });
