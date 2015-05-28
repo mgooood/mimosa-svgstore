@@ -1,23 +1,41 @@
-var path = require( "path" )
-  , validators = require( "validatemimosa" )
-  , config = require( path.join( process.cwd(), "src", "config" ) )
-  ;
+/* global mocha */
+var path       = require('path');
+var expect     = require('chai').expect;
+var validators = require('validatemimosa');
 
-describe("when mimosa-svgstore validates its configuration", function() {
+var config = require(path.resolve(__dirname, '../src/config'));
 
-  it("will not return errors when the config is correct", function() {
-    var mimosaConfig = {
-      svgstore:{}
-    };
-    var errors = config.validate( mimosaConfig, validators );
-    expect(errors.length).to.eql(0);
+describe('config', function() {
+
+  describe('#defaults()', function() {
+    it('returns an object', function() {
+      var defaultConfiguration = config.defaults();
+      expect(defaultConfiguration).to.be.an('object');
+    });
   });
 
-  it("will return an error when svgstore is set to a non-object", function() {
-    var mimosaConfig = {
-      svgstore:false
-    };
-    var errors = config.validate( mimosaConfig, validators );
-    expect(errors.length).to.eql(1);
+  describe('#validate()', function() {
+    var mimosaConfig, errors;
+
+    function validate() {
+      return config.validate(mimosaConfig, validators);
+    }
+
+    beforeEach(function setup() {
+      mimosaConfig = config.defaults();
+      errors = null;
+    });
+
+    it('accepts defaults', function() {
+      errors = validate();
+      expect(errors).to.have.length(0);
+    });
+
+    it('throws when config is not object', function() {
+      mimosaConfig.svgstore = null;
+
+      errors = validate();
+      expect(errors).to.have.length(1);
+    });
   });
 });
