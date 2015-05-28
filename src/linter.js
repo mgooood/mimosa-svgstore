@@ -6,6 +6,7 @@ const BIG_ATTR = 200;
 const TEMPLATE_ATTR_DISPLAY_NONE   = '<{tag}/> attribute `display` eq `none` (ln {position})';
 const TEMPLATE_ATTR_IS_LONG        = '<{tag}/> attribute `{attr}` is longer than {threshold} (ln {position})';
 const TEMPLATE_ATTR_HAS_LINEBREAKS = '<{tag}/> attribute `{attr}` contains line breaks (ln {position})';
+const TEMPLATE_CDATA               = '<![CDATA[]]> tag detected (ln {position})';
 const TEMPLATE_STYLE_TAG           = '<style/> tag detected (ln {position})';
 
 /**
@@ -38,7 +39,13 @@ function lint(node) {
     }
   }
 
-  switch (node.tagName.toLowerCase()) {
+  if (node.nodeType === node.CDATA_SECTION_NODE) {
+    warnings.push(TEMPLATE_CDATA
+      .replace('{position}', position));
+  }
+
+  var tag = (node.tagName || '').trim().toLowerCase();
+  switch (tag) {
     case STYLE:
       warnings.push(TEMPLATE_STYLE_TAG
         .replace('{position}', position));
