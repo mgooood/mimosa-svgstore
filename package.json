@@ -1,6 +1,6 @@
 {
   "name": "mimosa-svgstore",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/mgooood/mimosa-svgstore",
   "author": "Mark Good",
   "description": "A module for Mimosa to generate a single external svg file",
@@ -8,6 +8,10 @@
     {
       "name": "Mark Good",
       "email": "mark.gooood@gmail.com"
+    },
+    {
+      "name": "David Bazile",
+      "email": "davidbazile@gmail.com"
     }
   ],
   "repository": {
@@ -19,7 +23,11 @@
     "mmodule",
     "svg"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "glob": "^5.0.10",
+    "xmldom": "^0.1.19",
+    "xpath": "0.0.9"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=0.10"
