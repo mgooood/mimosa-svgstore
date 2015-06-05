@@ -105,6 +105,7 @@ function initializeRepository() {
 
   var root = _repository.createElement('svg');
   root.setAttribute('id', _repositoryId);
+  root.setAttribute('style', 'display: none;');
 
   _repository.appendChild(root);
 }
