@@ -14,22 +14,22 @@ The idea is to generate a single master `<svg>` element that can be included in 
 
 <ul>
   <li>
-    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <svg class="icon-document"><use xlink:href="#-svg-repository-document"/></svg>
     <span>Document #1</span>
   </li>
   <li>
-    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <svg class="icon-document"><use xlink:href="#-svg-repository-document"/></svg>
     <span>Document #2</span>
   </li>
   ...
   <li>
-    <svg class="icon-document" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-document"/></svg>
+    <svg class="icon-document"><use xlink:href="#-svg-repository-document"/></svg>
     <span>Document #50</span>
   </li>
 </ul>
 
 <button>
-  <svg class="icon-download" viewBox="0 0 100 100"><use xlink:href="#-svg-repository-download"/></svg>
+  <svg class="icon-download"><use xlink:href="#-svg-repository-download"/></svg>
   <span>Download Everything</span>
 </button>
 ```
@@ -54,8 +54,7 @@ The idea is to generate a single master `<svg>` element that can be included in 
 svgstore: {
   sourcePattern: 'assets/svgs/**/*.svg',
   outputFile:    'assets/svgs/repository.html',
-  repositoryId:  '-svg-repository',
-  viewBox:       '0 0 100 100'
+  repositoryId:  '-svg-repository'
 }
 ```
 
@@ -70,7 +69,3 @@ This is the name and path of the repository file that will be created.
 #### `svgstore.repositoryId` string
 
 This will be used as the main `<svg/>` tag's `id` attribute and also serves as the prefix for each imported `.svg` file.
-
-#### `svgstore.viewBox` string
-
-Allows the default `viewBox` of the main `<svg/>` tag to be overridden.
