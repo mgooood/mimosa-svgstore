@@ -1,7 +1,7 @@
 const PATH     = 'path';
 const POLYGON  = 'polygon';
 const STYLE    = 'style';
-const BIG_ATTR = 200;
+const BIG_ATTR = 1024;
 
 const CDATA_SECTION_NODE = 4;
 
