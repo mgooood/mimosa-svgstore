@@ -9,7 +9,6 @@ const PATH_UNWRITEABLE    = 'lorem/ipsum/dolor/cant-write-here.xml';
 const SOURCE_PATTERN      = 'test/fixtures/input/**/*.svg';
 const OUTPUT_FILE         = 'test/fixtures/output/test-repository.html';
 const REPOSITORY_ID       = 'test-repo-id';
-const VIEW_BOX            = '0 0 9001 9001';
 
 describe('execute#main()', function () {
   var config, logger;
@@ -29,12 +28,12 @@ describe('execute#main()', function () {
       var logs = logger.playback();
       var lastLog = logs[logs.length - 1];
       var errors = logs.filter(_onlyErrors);
-      var xml = fs.readFileSync(OUTPUT_FILE);
+      var xml = fs.readFileSync(OUTPUT_FILE).toString();
 
       expect(errors).to.be.empty;
       expect(lastLog.op).to.equal('success');
       expect(xml).to.contain(REPOSITORY_ID);
-      expect(xml).to.contain(VIEW_BOX);
+      expect(xml).to.match(/<symbol id="[^"]+" viewBox="[^"]+">.+<\/symbol>/);
       expect(xml).to.contain('id="test-repo-id-alpha"');
       expect(xml).to.contain('id="test-repo-id-bravo"');
       expect(xml).to.contain('id="test-repo-id-charlie"');
@@ -104,8 +103,7 @@ function generateConfig() {
   return {
     sourcePattern: SOURCE_PATTERN,
     outputFile:    OUTPUT_FILE,
-    repositoryId:  REPOSITORY_ID,
-    viewBox:       VIEW_BOX
+    repositoryId:  REPOSITORY_ID
   };
 }
 

@@ -5,8 +5,7 @@ exports.defaults = function() {
     svgstore: {
       sourcePattern: 'assets/svgs/**/*.svg',
       outputFile:    'assets/svgs/repository.html',
-      repositoryId:  '-svg-repository',
-      viewBox:       '0 0 100 100'
+      repositoryId:  '-svg-repository'
     }
   };
 };
@@ -18,7 +17,6 @@ exports.validate = function(config, validators) {
     validators.isString(errors, 'svgstore.sourcePattern', config.svgstore.sourcePattern);
     validators.isString(errors, 'svgstore.outputFile', config.svgstore.outputFile);
     validators.isString(errors, 'svgstore.repositoryId', config.svgstore.repositoryId);
-    validators.isString(errors, 'svgstore.viewBox', config.svgstore.viewBox);
   }
 
   return errors;

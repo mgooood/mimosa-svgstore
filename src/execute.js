@@ -11,20 +11,22 @@ var NAMESPACE_SVG   = 'http://www.w3.org/2000/svg';
 var NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
 
 var _numberOfRemainingFiles = 0;
-var _callback, _logger, _outputFile, _repository, _repositoryId, _viewBox;
+var _callback, _logger, _outputFile, _repository, _repositoryId;
 
 /**
  * Adds a collection of nodes to the repository.
  *
  * @param  {String} filename
  * @param  {NodeList} nodeList
+ * @param  {String} viewBox
  */
-function appendToRepository(filename, nodeList) {
-  var container = _repository.createElement('g');
+function appendToRepository(filename, nodeList, viewBox) {
+  var container = _repository.createElement('symbol');
   var id = generateId(filename);
 
   _logger.debug('Constructing node [[ #%s ]]', id);
   container.setAttribute('id', id);
+  container.setAttribute('viewBox', viewBox);
 
   // Import and wrap the nodes
   arrayify(nodeList).forEach(function(node) {
@@ -103,7 +105,7 @@ function initializeRepository() {
 
   var root = _repository.createElement('svg');
   root.setAttribute('id', _repositoryId);
-  root.setAttribute('viewBox', _viewBox);
+  root.setAttribute('style', 'display: none;');
 
   _repository.appendChild(root);
 }
@@ -119,7 +121,6 @@ function main(config, loggerInstance, callback) {
   var pattern = config.sourcePattern;
   _outputFile = config.outputFile;
   _repositoryId = config.repositoryId;
-  _viewBox = config.viewBox;
   _logger = loggerInstance;
   _callback = typeof callback === 'function' ? callback : function() {};
 
@@ -154,8 +155,9 @@ function processSingleSvgFile(filepath) {
       _logger.info('Processing [[ %s ]]', filepath);
       _logger.debug('Sanitizing nodes for [[ %s ]]', filepath);
       var nodes = sanitize(svg.childNodes, filepath);
+      var viewBox = svg.getAttribute('viewBox');
 
-      appendToRepository(filename, nodes);
+      appendToRepository(filename, nodes, viewBox);
     } catch (error) {
       _logger.error('[[ %s ]] %s', filepath, error);
     }
