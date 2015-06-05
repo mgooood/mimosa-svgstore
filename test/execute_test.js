@@ -29,7 +29,7 @@ describe('execute#main()', function () {
       var logs = logger.playback();
       var lastLog = logs[logs.length - 1];
       var errors = logs.filter(_onlyErrors);
-      var xml = fs.readFileSync(OUTPUT_FILE);
+      var xml = fs.readFileSync(OUTPUT_FILE).toString();
 
       expect(errors).to.be.empty;
       expect(lastLog.op).to.equal('success');
